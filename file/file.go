@@ -9,7 +9,17 @@ import (
 func Exists(path string) bool {
 	_, err := os.Stat(path)
 
-	return errors.Is(err, os.ErrNotExist)
+	return !errors.Is(err, os.ErrNotExist)
+}
+
+func IsDir(path string) bool {
+	info, err := os.Stat(path)
+
+	if err != nil {
+		handleError(err)
+	}
+
+	return info.IsDir()
 }
 
 func Read(path string) []byte {
