@@ -22,6 +22,16 @@ func Read(path string) []byte {
 	return file
 }
 
+func ReadDir(path string) []os.DirEntry {
+	dirs, err := os.ReadDir(path)
+
+	if err != nil {
+		handleError(err)
+	}
+
+	return dirs
+}
+
 func handleError(err error) {
 	log.Fatal(err)
 }
