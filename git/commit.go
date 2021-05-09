@@ -80,7 +80,7 @@ func (c *Commit) Print() {
 	white := color.New(color.FgWhite).PrintfFunc()
 	whiteUnderline := color.New(color.FgWhite).Add(color.Underline).PrintfFunc()
 
-	whiteUnderline("%s --- %s \n", c.RepoName, c.BranchName)
+	whiteUnderline("%s \n", c.BranchName)
 	white("%s ", c.Message)
 	blue("Time Since: %s ", c.TimeSince.String())
 	red("Name: %s \n\n", c.Name)
