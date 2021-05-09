@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/robbailey3/go-git-scrum/git"
 	"log"
 	"os"
+
+	"github.com/robbailey3/go-git-scrum/git"
 )
 
 func main() {
@@ -14,14 +15,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	repos := git.GetGitRepos(wd)
-
-	var commits []string
+	repos := git.GetRepositories(wd)
 
 	for _, repo := range repos {
-		commits = append(commits, git.GetRepoCommits(repo+"\\.git\\logs\\refs\\heads")...)
-	}
-	for _, commit := range commits {
-		fmt.Println(commit)
+		fmt.Println(repo.Name)
+		fmt.Println(repo.Path)
+		for _, branch := range repo.GetBranches() {
+			for _, commit := range branch.Commits {
+				fmt.Println(commit.Date)
+				fmt.Println("")
+			}
+		}
 	}
 }
