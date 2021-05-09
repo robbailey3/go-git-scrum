@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/robbailey3/go-git-scrum/git"
 )
@@ -18,13 +18,14 @@ func main() {
 	repos := git.GetRepositories(wd)
 
 	for _, repo := range repos {
-		fmt.Println(repo.Name)
-		fmt.Println(repo.Path)
-		for _, branch := range repo.GetBranches() {
-			for _, commit := range branch.Commits {
-				fmt.Println(commit.Date)
-				fmt.Println("")
+		for _, branch := range repo.Branches {
+			commits := branch.GetCommitsAfterDate(time.Now().Add(-3 * 24 * time.Hour))
+			if len(commits) > 0 {
+				for _, commit := range commits {
+					commit.Print()
+				}
 			}
+
 		}
 	}
 }
