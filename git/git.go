@@ -2,6 +2,9 @@ package git
 
 import (
 	"github.com/robbailey3/go-git-scrum/file"
+	"log"
+	"os"
+	"time"
 )
 
 func GetRepositories(path string) []*Repository {
@@ -13,4 +16,26 @@ func GetRepositories(path string) []*Repository {
 		}
 	}
 	return result
+}
+
+func PrintLatestCommits() {
+	wd, err := os.Getwd()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	repos := GetRepositories(wd)
+
+	for _, repo := range repos {
+		for _, branch := range repo.Branches {
+			commits := branch.GetCommitsAfterDate(time.Now().Add(-7 * 24 * time.Hour))
+			if len(commits) > 0 {
+				for _, commit := range commits {
+					commit.Print()
+				}
+			}
+
+		}
+	}
 }
