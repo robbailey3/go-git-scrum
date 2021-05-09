@@ -32,7 +32,7 @@ func PrintLatestCommits() {
 		for _, branch := range repo.Branches {
 			commits := branch.GetCommitsAfterDate(time.Now().Add(-7 * 24 * time.Hour))
 			if len(commits) > 0 {
-				fmt.Println(branch.Name)
+				fmt.Println(repo.Name)
 				for _, commit := range commits {
 					commit.Print()
 				}
