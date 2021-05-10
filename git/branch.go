@@ -1,9 +1,10 @@
 package git
 
 import (
-	"github.com/robbailey3/go-git-scrum/file"
 	"strings"
 	"time"
+
+	"github.com/robbailey3/go-git-scrum/file"
 )
 
 type Branch struct {
@@ -30,6 +31,8 @@ func (b *Branch) getCommits() {
 
 	commitStrings := strings.Split(str, "\n")
 
+	commitStrings = isCommitFilter(commitStrings)
+
 	var commits []*Commit
 
 	for _, commitString := range commitStrings {
@@ -51,6 +54,16 @@ func maxAgeFilter(commits []*Commit, maxAge time.Time) []*Commit {
 	for _, commit := range commits {
 		if commit.Date.After(maxAge) {
 			result = append(result, commit)
+		}
+	}
+	return result
+}
+
+func isCommitFilter(lines []string) []string {
+	var result []string
+	for _, line := range lines {
+		if strings.Contains(line, "commit") {
+			result = append(result, line)
 		}
 	}
 	return result

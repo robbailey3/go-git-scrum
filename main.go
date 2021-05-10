@@ -1,7 +1,9 @@
 package main
 
-import "github.com/robbailey3/go-git-scrum/git"
+import (
+	"github.com/robbailey3/go-git-scrum/cmd"
+)
 
 func main() {
-	git.PrintLatestCommits()
+	cmd.Execute()
 }
