@@ -1,10 +1,11 @@
 package git
 
 import (
-	"github.com/fatih/color"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/fatih/color"
 )
 
 type Commit struct {
@@ -82,6 +83,6 @@ func (c *Commit) Print() {
 
 	whiteUnderline("%s \n", c.BranchName)
 	white("%s ", c.Message)
-	blue("Time Since: %s ", c.TimeSince.String())
+	blue("Commited at: %s ", time.Now().Add(-c.TimeSince).Format("15:04:05 02-Jan-2006"))
 	red("Name: %s \n\n", c.Name)
 }
