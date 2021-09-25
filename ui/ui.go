@@ -3,6 +3,7 @@ package ui
 import (
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/robbailey3/go-git-scrum/git"
 )
 
 const (
@@ -11,14 +12,15 @@ const (
 )
 
 type BaseUiModel struct {
-	viewport viewport.Model
-	ready    bool
-	content  string
+	viewport     viewport.Model
+	ready        bool
+	content      string
+	Repositories []*git.Repository
 }
 
-func InitBaseUiModel() *BaseUiModel {
+func InitBaseUiModel(repos []*git.Repository) *BaseUiModel {
 	return &BaseUiModel{
-		content: "Hello world",
+		Repositories: repos,
 	}
 }
 
@@ -31,6 +33,10 @@ func (m *BaseUiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// 	cmd  tea.Cmd
 	// 	cmds []tea.Cmd
 	// )
+	m.content = ""
+	for _, repo := range m.Repositories {
+		m.content += repo.Name + "\n"
+	}
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
