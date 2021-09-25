@@ -23,7 +23,7 @@ var rootCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		p := tea.NewProgram(ui.InitBaseUiModel(git.GetRepositories(wd)), tea.WithAltScreen(), tea.WithMouseCellMotion())
+		p := tea.NewProgram(ui.InitBaseUiModel(git.GetRepositoriesWithCommits(numberOfDays, wd)), tea.WithAltScreen(), tea.WithMouseCellMotion())
 		if err := p.Start(); err != nil {
 			fmt.Printf("Alas, there's been an error: %v", err)
 			os.Exit(1)
@@ -32,7 +32,7 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
-	rootCmd.PersistentFlags().IntVarP(&numberOfDays, "Number of days", "n", 3, "The number of days to show commits for")
+	rootCmd.PersistentFlags().IntVarP(&numberOfDays, "Number of days", "n", 10, "The number of days to show commits for")
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

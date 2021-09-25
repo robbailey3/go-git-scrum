@@ -2,8 +2,7 @@ package git
 
 import (
 	"fmt"
-	"log"
-	"os"
+	"strconv"
 	"time"
 
 	"github.com/robbailey3/go-git-scrum/file"
@@ -20,24 +19,32 @@ func GetRepositories(path string) []*Repository {
 	return result
 }
 
-func PrintLatestCommits(numberOfDays int) {
-	wd, err := os.Getwd()
+func GetRepositoriesWithCommits(n int, path string) []*Repository {
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	repos := GetRepositories(wd)
-
-	for _, repo := range repos {
+	repos := GetRepositories(path)
+	return filterRepos(repos, func(repo *Repository) bool {
+		hasNewCommit := false
 		for _, branch := range repo.Branches {
-			commits := branch.GetCommitsAfterDate(time.Now().Add(time.Duration(-numberOfDays*24) * time.Hour))
-			if len(commits) > 0 {
-				fmt.Println(repo.Name)
-				for _, commit := range commits {
-					commit.Print()
+			if len(branch.Commits) < 1 {
+				continue
+			}
+			for _, commit := range branch.Commits {
+				if commit.TimeSince < time.Duration(n*int(time.Hour)*24) {
+					hasNewCommit = true
 				}
 			}
 		}
+		return hasNewCommit
+	})
+}
+
+func filterRepos(repos []*Repository, filterFunc func(repo *Repository) bool) []*Repository {
+	var result []*Repository
+	for _, repo := range repos {
+		if filterFunc(repo) {
+			result = append(result, repo)
+		}
+		fmt.Println(repo.Name + " " + strconv.FormatBool(filterFunc(repo)))
 	}
+	return result
 }
