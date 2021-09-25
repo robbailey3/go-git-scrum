@@ -1,8 +1,6 @@
 package git
 
 import (
-	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/robbailey3/go-git-scrum/file"
@@ -20,7 +18,6 @@ func GetRepositories(path string) []*Repository {
 }
 
 func GetRepositoriesWithCommits(n int, path string) []*Repository {
-
 	repos := GetRepositories(path)
 	return filterRepos(repos, func(repo *Repository) bool {
 		hasNewCommit := false
@@ -29,7 +26,7 @@ func GetRepositoriesWithCommits(n int, path string) []*Repository {
 				continue
 			}
 			for _, commit := range branch.Commits {
-				if commit.TimeSince < time.Duration(n*int(time.Hour)*24) {
+				if commit.Date.Unix() < time.Now().AddDate(0, 0, -n).Unix() {
 					hasNewCommit = true
 				}
 			}
@@ -44,7 +41,6 @@ func filterRepos(repos []*Repository, filterFunc func(repo *Repository) bool) []
 		if filterFunc(repo) {
 			result = append(result, repo)
 		}
-		fmt.Println(repo.Name + " " + strconv.FormatBool(filterFunc(repo)))
 	}
 	return result
 }

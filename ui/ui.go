@@ -48,19 +48,22 @@ func (m *BaseUiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		if !m.ready {
 			m.viewport = viewport.Model{Width: msg.Width, Height: msg.Height - verticalMargins}
-			m.viewport.SetContent(m.content)
 			m.ready = true
 		} else {
 			m.viewport.Width = msg.Width
 			m.viewport.Height = msg.Height - verticalMargins
 		}
 	}
+	m.viewport.SetContent(m.content)
 	return m, nil
 }
 
 func (m *BaseUiModel) View() string {
 	if !m.ready {
-		return "\n  Initializing..."
+		return "Initializing..."
+	}
+	if len(m.Repositories) == 0 {
+		return "No repositories found"
 	}
 	return m.viewport.View()
 }
